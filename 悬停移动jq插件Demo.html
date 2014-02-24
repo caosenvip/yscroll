@@ -3,99 +3,15 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>悬停移动jq插件Demo</title>
+
+<link rel="stylesheet" href="src/base.css">
+<link rel="stylesheet" href="src/index.css">
 <script src="http://www.haoyuncai.com/js/jquery.min.js"></script>
-<link rel="stylesheet" href="http://www.haoyuncai.com/css/base.css">
-<style type="text/css">
-body{background:#fff;}
-	#yscrollshell{width:210px;margin:20px auto;font-size:14px;}
-	.control{margin:10px 0 0;}
-	.up,.down{padding:0 10px;margin:0 20px;background:#E4DEDE;}
-  #yscrollshell ul{list-style:none;margin:0;padding:0;width:200px;height:300px;overflow:hidden;border:1px solid blue;}
-  #yscrollshell ul li{border-bottom:1px solid gray;}
-  .bbn{border-bottom:none !important;}
-
-  .kjbox{width:215px;height:325px; padding:2px;border:#c9c9c9 1px solid;overflow:hidden; position:relative;margin:20px auto;}
-.kjbox dt{ border-bottom:#d61518 2px solid;}
-.kjbox dt .tit{padding:4px 10px 2px 5px;float: left;}
-.kjbox dt span{margin-left:10px;padding:4px 10px 2px;float:left;color:#666;cursor: pointer;}
-.kjbox dt span.crt{background:#d61518;color:#fff; font-weight:bold;}
-.kjbox .scrollbox{height:278px;overflow:hidden;*position:relative;}
-.kjbox ul{padding:5px 2px;}
-.kjbox ul li{line-height:24px; border-bottom:#b5b5b5 1px dashed; margin-bottom:5px;color:#666;position:relative;}
-.kjbox ul li b{margin:0 2px;font-size:14px;color:#D71718;}
-.kjbox ul li strong{margin:0 2px;font-size:14px;}
-.kjbox ul li span{margin-left:10px;padding:2px 3px;background:#F5F5F5;}
-.kjbox ul li .bluehao{color:#0075a9;}
-.kjbox ul li a{ width:33px;height:20px;position:absolute;text-align:center;line-height:20px;color:#0075a9;top:27px;right:0;*top:22px;}
-.kjbox ul li a:hover{ background:#F00; color:#FFF; }
-.kjbox .slide-nav{width:221px;margin:2px -2px;line-height:.8;*line-height:.9;border-top:1px solid #d2d2d2;background: #F2F2F2;}
-.kjbox .slide-nav a{width:109px;height:22px;float:left;text-align:center;font-weight:900;font-size:30px;font-family:"宋体";}
-.kjbox .slide-nav a:hover{color:#fff;background:#d61518;}
-.kjbox .slide-nav a.nav-down{border-left:1px solid #d2d2d2;}
-</style>
+<script src="src/yscroll.min.js"></script>
 <script>
-/** 原版
-(function($){
-  $.fn.Yscroll = function(options){
-    var settings ={
-      over : 1, //悬停移动高度px
-      tap : 3, //按下移动高度px
-      space : 30, //延迟间隔ms 越大帧数越低
-      up : '.up', //向上按钮对象
-      down : '.down', //向下按钮对象
-      shell: '.scroll' //滚动层对象
-    };
-    settings = $.extend({}, settings, options);
-    var upmove,dnmove,height,speed;
-    var $t = $(this),_os = settings.over,_ts=settings.tap,
-      _sp = settings.space;
-    var $scrolls = $t.find(settings.shell),$scroll,
-      $up = $t.find(settings.up), $down = $t.find(settings.down);
-
-    $up.mouseenter(function() {
-      $scroll = $scrolls.not(':hidden');
-      upmove = true;speed =_os;up();
-    }).mouseleave(function() {
-      upmove = false;
-    }).mousedown(function() {
-      speed = _ts;
-    }).mouseup(function() {
-      speed = _os;
-    });
-    $down.mouseenter(function() {
-      $scroll = $scrolls.not(':hidden');
-      height = $scroll[0].scrollHeight-$scroll.height();
-      dnmove = true;speed =_os;down();
-    }).mouseleave(function() {
-      dnmove = false;
-    }).mousedown(function() {
-      speed = _ts;
-    }).mouseup(function() {
-      speed = _os;
-    });
-    function up(){
-      var st = $scroll.scrollTop();
-      var limit = st>0;
-      limit && $scroll.scrollTop(st-speed);
-      limit && upmove && setTimeout(up,_sp);
-    }
-    function down(){
-      var st = $scroll.scrollTop();
-      var limit = st<height;
-      limit && $scroll.scrollTop(st+speed);
-      limit && dnmove && setTimeout(down,_sp);
-    }
-  }
-})(jQuery);
-*/
-
-(function($){$.fn.Yscroll=function(c){var d={over:1,tap:3,space:30,up:'.up',down:'.down',shell:'.scroll'};d=$.extend({},d,c);var e,dnmove,height,speed;var f=$(this),_os=d.over,_ts=d.tap,_sp=d.space;var g=f.find(d.shell),$scroll,$up=f.find(d.up),$down=f.find(d.down);$up.mouseenter(function(){$scroll=g.not(':hidden');e=true;speed=_os;up()}).mouseleave(function(){e=false}).mousedown(function(){speed=_ts}).mouseup(function(){speed=_os});$down.mouseenter(function(){$scroll=g.not(':hidden');height=$scroll[0].scrollHeight-$scroll.height();dnmove=true;speed=_os;down()}).mouseleave(function(){dnmove=false}).mousedown(function(){speed=_ts}).mouseup(function(){speed=_os});function up(){var a=$scroll.scrollTop();var b=a>0;b&&$scroll.scrollTop(a-speed);b&&e&&setTimeout(up,_sp)}function down(){var a=$scroll.scrollTop();var b=a<height;b&&$scroll.scrollTop(a+speed);b&&dnmove&&setTimeout(down,_sp)}}})(jQuery);
 
 $(function(){
-  $('#yscrollshell').Yscroll({'overspd':1,'tapspd':5,'space':30});
-
   //切换标签通用方法
-
   var $tabs = $('.tabWarp').find('.tabHd');
   $tabs.on('click','span',function(){
     var $t = $(this),idx = $t.parent().find('span').index(this);
@@ -103,7 +19,10 @@ $(function(){
     $t.addClass('crt').siblings().removeClass('crt');
     $bd.addClass('dn').eq(idx).removeClass('dn');
   });
-$('.kjbox').Yscroll({'over':2,'tap':7,'space':20,'shell':'.scrollbox','up':'.nav-up','down':'.nav-down'});
+
+  $('#yscrollshell').Yscroll({'overspd':1,'tapspd':5,'space':30});
+
+  $('.kjbox').Yscroll({'over':2,'tap':7,'space':20,'shell':'.scrollbox','up':'.nav-up','down':'.nav-down'});
 });
 </script>
 </head>
