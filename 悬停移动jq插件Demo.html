@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>悬停移动jq插件Demo</title>
+<script src="http://www.haoyuncai.com/js/jquery.min.js"></script>
+<link rel="stylesheet" href="http://www.haoyuncai.com/css/base.css">
+<style type="text/css">
+body{background:#fff;}
+	#yscrollshell{width:210px;margin:20px auto;font-size:14px;}
+	.control{margin:10px 0 0;}
+	.up,.down{padding:0 10px;margin:0 20px;background:#E4DEDE;}
+  #yscrollshell ul{list-style:none;margin:0;padding:0;width:200px;height:300px;overflow:hidden;border:1px solid blue;}
+  #yscrollshell ul li{border-bottom:1px solid gray;}
+  .bbn{border-bottom:none !important;}
+
+  .kjbox{width:215px;height:325px; padding:2px;border:#c9c9c9 1px solid;overflow:hidden; position:relative;margin:20px auto;}
+.kjbox dt{ border-bottom:#d61518 2px solid;}
+.kjbox dt .tit{padding:4px 10px 2px 5px;float: left;}
+.kjbox dt span{margin-left:10px;padding:4px 10px 2px;float:left;color:#666;cursor: pointer;}
+.kjbox dt span.crt{background:#d61518;color:#fff; font-weight:bold;}
+.kjbox .scrollbox{height:278px;overflow:hidden;*position:relative;}
+.kjbox ul{padding:5px 2px;}
+.kjbox ul li{line-height:24px; border-bottom:#b5b5b5 1px dashed; margin-bottom:5px;color:#666;position:relative;}
+.kjbox ul li b{margin:0 2px;font-size:14px;color:#D71718;}
+.kjbox ul li strong{margin:0 2px;font-size:14px;}
+.kjbox ul li span{margin-left:10px;padding:2px 3px;background:#F5F5F5;}
+.kjbox ul li .bluehao{color:#0075a9;}
+.kjbox ul li a{ width:33px;height:20px;position:absolute;text-align:center;line-height:20px;color:#0075a9;top:27px;right:0;*top:22px;}
+.kjbox ul li a:hover{ background:#F00; color:#FFF; }
+.kjbox .slide-nav{width:221px;margin:2px -2px;line-height:.8;*line-height:.9;border-top:1px solid #d2d2d2;background: #F2F2F2;}
+.kjbox .slide-nav a{width:109px;height:22px;float:left;text-align:center;font-weight:900;font-size:30px;font-family:"宋体";}
+.kjbox .slide-nav a:hover{color:#fff;background:#d61518;}
+.kjbox .slide-nav a.nav-down{border-left:1px solid #d2d2d2;}
+</style>
+<script>
+/** 原版
+(function($){
+  $.fn.Yscroll = function(options){
+    var settings ={
+      over : 1, //悬停移动高度px
+      tap : 3, //按下移动高度px
+      space : 30, //延迟间隔ms 越大帧数越低
+      up : '.up', //向上按钮对象
+      down : '.down', //向下按钮对象
+      shell: '.scroll' //滚动层对象
+    };
+    settings = $.extend({}, settings, options);
+    var upmove,dnmove,height,speed;
+    var $t = $(this),_os = settings.over,_ts=settings.tap,
+      _sp = settings.space;
+    var $scrolls = $t.find(settings.shell),$scroll,
+      $up = $t.find(settings.up), $down = $t.find(settings.down);
+
+    $up.mouseenter(function() {
+      $scroll = $scrolls.not(':hidden');
+      upmove = true;speed =_os;up();
+    }).mouseleave(function() {
+      upmove = false;
+    }).mousedown(function() {
+      speed = _ts;
+    }).mouseup(function() {
+      speed = _os;
+    });
+    $down.mouseenter(function() {
+      $scroll = $scrolls.not(':hidden');
+      height = $scroll[0].scrollHeight-$scroll.height();
+      dnmove = true;speed =_os;down();
+    }).mouseleave(function() {
+      dnmove = false;
+    }).mousedown(function() {
+      speed = _ts;
+    }).mouseup(function() {
+      speed = _os;
+    });
+    function up(){
+      var st = $scroll.scrollTop();
+      var limit = st>0;
+      limit && $scroll.scrollTop(st-speed);
+      limit && upmove && setTimeout(up,_sp);
+    }
+    function down(){
+      var st = $scroll.scrollTop();
+      var limit = st<height;
+      limit && $scroll.scrollTop(st+speed);
+      limit && dnmove && setTimeout(down,_sp);
+    }
+  }
+})(jQuery);
+*/
+
+(function($){$.fn.Yscroll=function(c){var d={over:1,tap:3,space:30,up:'.up',down:'.down',shell:'.scroll'};d=$.extend({},d,c);var e,dnmove,height,speed;var f=$(this),_os=d.over,_ts=d.tap,_sp=d.space;var g=f.find(d.shell),$scroll,$up=f.find(d.up),$down=f.find(d.down);$up.mouseenter(function(){$scroll=g.not(':hidden');e=true;speed=_os;up()}).mouseleave(function(){e=false}).mousedown(function(){speed=_ts}).mouseup(function(){speed=_os});$down.mouseenter(function(){$scroll=g.not(':hidden');height=$scroll[0].scrollHeight-$scroll.height();dnmove=true;speed=_os;down()}).mouseleave(function(){dnmove=false}).mousedown(function(){speed=_ts}).mouseup(function(){speed=_os});function up(){var a=$scroll.scrollTop();var b=a>0;b&&$scroll.scrollTop(a-speed);b&&e&&setTimeout(up,_sp)}function down(){var a=$scroll.scrollTop();var b=a<height;b&&$scroll.scrollTop(a+speed);b&&dnmove&&setTimeout(down,_sp)}}})(jQuery);
+
+$(function(){
+  $('#yscrollshell').Yscroll({'overspd':1,'tapspd':5,'space':30});
+
+  //切换标签通用方法
+
+  var $tabs = $('.tabWarp').find('.tabHd');
+  $tabs.on('click','span',function(){
+    var $t = $(this),idx = $t.parent().find('span').index(this);
+    var $bd = $t.closest('.tabWarp').find('.tabBd');
+    $t.addClass('crt').siblings().removeClass('crt');
+    $bd.addClass('dn').eq(idx).removeClass('dn');
+  });
+$('.kjbox').Yscroll({'over':2,'tap':7,'space':20,'shell':'.scrollbox','up':'.nav-up','down':'.nav-down'});
+});
+</script>
+</head>
+<body>
+<div id="yscrollshell">
+  <ul class="scroll">
+    	<li>
+       <strong>双色球1</strong><span>第2014008期01-19 21:50</span><br>
+      	<b class="">05</b><b class="">14</b><b class="">16</b><b class="">21</b><b class="">29</b><b class="">30</b><b class="bluehao">12</b>
+      <br> 每周二、四、日开奖
+      </li>
+    	<li>
+      	<strong>大乐透2</strong><span>第2014009期01-20 21:50</span><br>
+      	<b class="">10</b><b class="">18</b><b class="">25</b><b class="">29</b><b class="">33</b><b class="">07</b><b class="bluehao">08</b>
+			<a href="http://news.haoyuncai.com/lottery_results.html?type=3">详情</a><br> 每周二、四、日开奖
+     </li>
+    	<li>
+       <strong>福彩3D</strong><span>第2014020期01-20 21:50</span><br>
+      	<b>0</b><b>8</b><b>7</b>
+    	</li>
+    	<li>
+       <strong>排列三4</strong><span>第2014020期01-20 21:50</span><br>
+      	<b>1</b><b>8</b><b>2</b>
+       <!-- 试机号 : 5,8,3 --><a href="http://news.haoyuncai.com/lottery_results.html?type=1">详情</a>
+    	</li>
+    	<li>
+       <strong>排列五5</strong><span>第2014020期01-20 21:50</span><br>
+      	<b>1</b><b>8</b><b>2</b><b>0</b><b>2</b>
+       <a href="http://news.haoyuncai.com/lottery_results.html?type=2">详情</a>
+    	</li>
+    	<li>
+       <strong>七星彩6</strong><span>第2014008期01-19 21:30</span><br>
+      	<b>1</b><b>9</b><b>5</b><b>7</b><b>4</b><b>2</b><b>5</b>
+       <a href="http://news.haoyuncai.com/lottery_results.html?type=4">详情</a>
+    	</li>
+    	<li>
+       <strong>七乐彩7</strong><span>第2014009期01-20 21:50</span><br>
+      	<b>01</b><b>09</b><b>17</b><b>18</b><b>21</b><b>22</b><b>25</b><b>13</b>
+    	</li>
+      <li>
+       <strong>双色球1</strong><span>第2014008期01-19 21:50</span><br>
+        <b class="">05</b><b class="">14</b><b class="">16</b><b class="">21</b><b class="">29</b><b class="">30</b><b class="bluehao">12</b>
+      <br> 每周二、四、日开奖
+      </li>
+      <li>
+        <strong>大乐透2</strong><span>第2014009期01-20 21:50</span><br>
+        <b class="">10</b><b class="">18</b><b class="">25</b><b class="">29</b><b class="">33</b><b class="">07</b><b class="bluehao">08</b>
+      <a href="http://news.haoyuncai.com/lottery_results.html?type=3">详情</a><br> 每周二、四、日开奖
+     </li>
+      <li>
+       <strong>福彩3D</strong><span>第2014020期01-20 21:50</span><br>
+        <b>0</b><b>8</b><b>7</b>
+      </li>
+      <li>
+       <strong>排列三4</strong><span>第2014020期01-20 21:50</span><br>
+        <b>1</b><b>8</b><b>2</b>
+       <!-- 试机号 : 5,8,3 --><a href="http://news.haoyuncai.com/lottery_results.html?type=1">详情</a>
+      </li>
+      <li>
+       <strong>排列五5</strong><span>第2014020期01-20 21:50</span><br>
+        <b>1</b><b>8</b><b>2</b><b>0</b><b>2</b>
+       <a href="http://news.haoyuncai.com/lottery_results.html?type=2">详情</a>
+      </li>
+      <li>
+       <strong>七星彩6</strong><span>第2014008期01-19 21:30</span><br>
+        <b>1</b><b>9</b><b>5</b><b>7</b><b>4</b><b>2</b><b>5</b>
+       <a href="http://news.haoyuncai.com/lottery_results.html?type=4">详情</a>
+      </li>
+      <li class="bbn">
+       <strong>七乐彩7</strong><span>第2014009期01-20 21:50</span><br>
+        <b>01</b><b>09</b><b>17</b><b>18</b><b>21</b><b>22</b><b>25</b><b>13</b>
+      </li>
+  </ul>
+  <div class="control">
+  <a class="up" href="javascript:;">向上</a>    <a class="down" href="javascript:;">向下</a>
+  </div>
+</div>
+<dl class="kjbox tabWarp">
+  <dt class="tabHd cf">
+    <b class="tit">最新开奖</b><span class="crt">数字彩</span><span>竞技彩</span>
+  </dt>
+  <dd class="scrollbox tabBd">
+    <ul>
+        <li>
+         <strong>双色球</strong><span>第2014011期01-26 21:50</span><br>
+          <b class="">09</b><b class="">10</b><b class="">13</b><b class="">14</b><b class="">21</b><b class="">32</b><b class="bluehao">02</b>
+        <br> 每周二、四、日开奖
+        </li>
+        <li>
+          <strong>大乐透</strong><span>第2014012期01-27 21:50</span><br>
+          <b class="">09</b><b class="">20</b><b class="">21</b><b class="">23</b><b class="">29</b><b class="">05</b><b class="bluehao">07</b>
+        <a href="http://news.haoyuncai.com/lottery_results.html?type=3">详情</a><br> 每周二、四、日开奖
+       </li>
+        <li>
+         <strong>福彩3D</strong><span>第2014027期01-27 21:50</span><br>
+          <b>7</b><b>7</b><b>4</b>
+        </li>
+        <li>
+         <strong>排列三</strong><span>第2014027期01-27 21:50</span><br>
+          <b>7</b><b>2</b><b>7</b>
+         <!-- 试机号 : 5,8,3 --><a href="http://news.haoyuncai.com/lottery_results.html?type=1">详情</a>
+        </li>
+        <li>
+         <strong>排列五</strong><span>第2014027期01-27 21:50</span><br>
+          <b>7</b><b>2</b><b>7</b><b>1</b><b>8</b>
+         <a href="http://news.haoyuncai.com/lottery_results.html?type=2">详情</a>
+        </li>
+        <li>
+         <strong>七星彩</strong><span>第2014011期01-26 21:30</span><br>
+          <b>6</b><b>0</b><b>6</b><b>0</b><b>2</b><b>6</b><b>5</b>
+         <a href="http://news.haoyuncai.com/lottery_results.html?type=4">详情</a>
+        </li>
+        <li>
+         <strong>七乐彩</strong><span>第2014012期01-27 21:50</span><br>
+          <b>06</b><b>08</b><b>15</b><b>19</b><b>24</b><b>26</b><b>29</b><b>27</b>
+        </li>
+    </ul>
+  </dd>
+  <dd class="scrollbox tabBd dn">
+    <ul>
+        <li>
+        <strong>胜负14</strong><span>1第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>2第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>3第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>4第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>5第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>6第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>7第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>8第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>9第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>10第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>11第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+        <li>
+        <strong>胜负14</strong><span>12第2014013期01-26 22:12</span><br>
+          <b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b><b>1</b><b>1</b><b>1</b><b>0</b><b>3</b><b>0</b><b>3</b><b>3</b>
+        </li>
+   </ul>
+  </dd>
+  <dd class="slide-nav cf">
+   <a class="nav-up" href="javascript:;">︿</a><a class="nav-down" href="javascript:;">﹀</a>
+  </dd>
+ </dl>
+</body>
+</html>
